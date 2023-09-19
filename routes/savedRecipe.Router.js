@@ -1,9 +1,9 @@
 const express = require("express");
 const recipeModel = require("../models/savedRecipe.model");
 
-const recipeRouter = express.Router();
+const savedRecipeRouter = express.Router();
 
-recipeRouter.get("/", async (req, res) => {
+savedRecipeRouter.get("/", async (req, res) => {
   try {
     const { id, title, _page, _limit, _sort, _order } = req.query;
     const { _id, q } = req.query;
@@ -50,7 +50,7 @@ recipeRouter.get("/", async (req, res) => {
   }
 });
 
-recipeRouter.get("/:id", async (req, res) => {
+savedRecipeRouter.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -67,4 +67,33 @@ recipeRouter.get("/:id", async (req, res) => {
   }
 });
 
-module.exports = recipeRouter;
+
+
+savedRecipeRouter.post("/", async (req, res) => {
+  try {
+    const { id, title, image, imageType } = req.body;
+
+    if (!id || !title) {
+      return res.status(400).json({ error: "ID and Title are required fields" });
+    }
+
+    const newRecipe = new recipeModel({
+      id,
+      title,
+      image,
+      imageType,
+    });
+
+    await newRecipe.save();
+
+    res.status(201).json(newRecipe);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to create a new recipe" });
+  }
+});
+
+
+
+
+module.exports = savedRecipeRouter;
