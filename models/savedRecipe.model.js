@@ -1,8 +1,8 @@
 const { Schema, model } = require("mongoose");
 
 const recipeSchema = new Schema({
-  id: { type: Number, required: true },
-  title: { type: String, required: true },
+  id: { type: Number },
+  title: { type: String },
   image: { type: String },
   imageType: { type: String },
 });

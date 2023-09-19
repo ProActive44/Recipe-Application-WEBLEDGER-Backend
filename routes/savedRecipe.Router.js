@@ -44,8 +44,10 @@ savedRecipeRouter.get("/", async (req, res) => {
       .sort(sortOptions)
       .skip(skip)
       .limit(limit);
+
     res.json({ data, totalPages });
   } catch (error) {
+    // console.log(error)
     res.status(500).json({ error: "Failed to fetch products" });
   }
 });
@@ -53,8 +55,7 @@ savedRecipeRouter.get("/", async (req, res) => {
 savedRecipeRouter.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-
-    const recipe = await recipeModel.findById(id);
+    const recipe = await recipeModel.findOne({ id: id });
 
     if (!recipe) {
       return res.status(404).json({ error: "Product not found" });
@@ -62,19 +63,19 @@ savedRecipeRouter.get("/:id", async (req, res) => {
 
     res.json(recipe);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ error: "Failed to fetch product" });
   }
 });
-
-
 
 savedRecipeRouter.post("/", async (req, res) => {
   try {
     const { id, title, image, imageType } = req.body;
 
     if (!id || !title) {
-      return res.status(400).json({ error: "ID and Title are required fields" });
+      return res
+        .status(400)
+        .json({ error: "ID and Title are required fields" });
     }
 
     const newRecipe = new recipeModel({
@@ -88,12 +89,9 @@ savedRecipeRouter.post("/", async (req, res) => {
 
     res.status(201).json(newRecipe);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ error: "Failed to create a new recipe" });
   }
 });
-
-
-
 
 module.exports = savedRecipeRouter;
